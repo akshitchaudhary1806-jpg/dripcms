@@ -1,0 +1,1292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DRIP CULTURE — Custom Clothing</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --black: #0a0a0a;
+    --white: #f5f0e8;
+    --accent: #c8f04c;
+    --muted: #1e1e1e;
+    --gray: #888;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--black);
+    color: var(--white);
+    font-family: 'DM Sans', sans-serif;
+    cursor: none;
+    overflow-x: hidden;
+  }
+
+  /* Custom cursor */
+  .cursor {
+    width: 12px; height: 12px;
+    background: var(--accent);
+    border-radius: 50%;
+    position: fixed; top: 0; left: 0;
+    pointer-events: none; z-index: 9999;
+    transform: translate(-50%, -50%);
+    transition: transform 0.1s, width 0.2s, height 0.2s;
+    mix-blend-mode: difference;
+  }
+  .cursor.grow { width: 40px; height: 40px; }
+
+  /* NAV */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 1.5rem 4rem;
+    background: rgba(10,10,10,0.85);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid #222;
+  }
+  .nav-logo {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 2rem;
+    letter-spacing: 0.1em;
+    color: var(--white);
+    text-decoration: none;
+  }
+  .nav-logo span { color: var(--accent); }
+  .nav-links { display: flex; gap: 2.5rem; list-style: none; }
+  .nav-links a {
+    color: var(--gray);
+    text-decoration: none;
+    font-size: 0.85rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    transition: color 0.2s;
+  }
+  .nav-links a:hover { color: var(--accent); }
+  .nav-cta {
+    background: var(--accent);
+    color: var(--black);
+    border: none;
+    padding: 0.65rem 1.5rem;
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 500;
+    font-size: 0.85rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    cursor: none;
+    transition: transform 0.15s, box-shadow 0.15s;
+  }
+  .nav-cta:hover { transform: scale(1.03); box-shadow: 0 0 30px rgba(200,240,76,0.3); }
+
+  /* HERO */
+  .hero {
+    min-height: 100vh;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    padding-top: 80px;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero-left {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 5rem 4rem;
+    position: relative;
+    z-index: 2;
+  }
+  .hero-tag {
+    font-size: 0.75rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 1.5rem;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .hero-tag::before { content: ''; width: 40px; height: 1px; background: var(--accent); }
+  .hero-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(5rem, 9vw, 9rem);
+    line-height: 0.92;
+    letter-spacing: 0.02em;
+    margin-bottom: 2rem;
+  }
+  .hero-title .outline {
+    -webkit-text-stroke: 1px var(--white);
+    color: transparent;
+  }
+  .hero-title .accent { color: var(--accent); }
+  .hero-desc {
+    color: var(--gray);
+    font-size: 1rem;
+    line-height: 1.8;
+    max-width: 420px;
+    margin-bottom: 2.5rem;
+  }
+  .hero-btns { display: flex; gap: 1rem; align-items: center; }
+  .btn-primary {
+    background: var(--accent);
+    color: var(--black);
+    border: none;
+    padding: 1rem 2.2rem;
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 500;
+    font-size: 0.9rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    text-decoration: none;
+    cursor: none;
+    display: inline-block;
+    transition: transform 0.15s, box-shadow 0.2s;
+  }
+  .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 10px 40px rgba(200,240,76,0.25); }
+  .btn-ghost {
+    border: 1px solid #333;
+    color: var(--white);
+    padding: 1rem 2.2rem;
+    font-size: 0.9rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    text-decoration: none;
+    cursor: none;
+    display: inline-block;
+    transition: border-color 0.2s, color 0.2s;
+  }
+  .btn-ghost:hover { border-color: var(--accent); color: var(--accent); }
+
+  .hero-right {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+  }
+  .hero-visual {
+    width: 100%;
+    height: 100%;
+    background: var(--muted);
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+  }
+  .hero-bg-text {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 22vw;
+    color: #161616;
+    position: absolute;
+    user-select: none;
+    white-space: nowrap;
+    animation: slide 12s linear infinite;
+  }
+  @keyframes slide { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+  .hero-tshirt {
+    position: relative;
+    z-index: 2;
+    width: 320px;
+    height: 380px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: float 4s ease-in-out infinite;
+  }
+  @keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-18px)} }
+  .tshirt-svg { width: 100%; height: 100%; }
+  .hero-stats {
+    position: absolute;
+    bottom: 3rem; left: 4rem;
+    display: flex; gap: 3rem;
+    z-index: 2;
+  }
+  .stat-item { }
+  .stat-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 2.5rem;
+    color: var(--accent);
+    line-height: 1;
+  }
+  .stat-label { font-size: 0.75rem; color: var(--gray); text-transform: uppercase; letter-spacing: 0.1em; margin-top: 4px; }
+
+  /* MARQUEE */
+  .marquee-bar {
+    background: var(--accent);
+    padding: 0.75rem 0;
+    overflow: hidden;
+    white-space: nowrap;
+  }
+  .marquee-inner {
+    display: inline-block;
+    animation: marquee 18s linear infinite;
+  }
+  .marquee-inner span {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.3rem;
+    letter-spacing: 0.2em;
+    color: var(--black);
+    margin-right: 3rem;
+  }
+  @keyframes marquee { from{transform:translateX(0)} to{transform:translateX(-50%)} }
+
+  /* PRODUCTS */
+  .section { padding: 7rem 4rem; }
+  .section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 3rem;
+  }
+  .section-label {
+    font-size: 0.75rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 0.75rem;
+  }
+  .section-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(2.5rem, 5vw, 4.5rem);
+    line-height: 1;
+    letter-spacing: 0.02em;
+  }
+  .products-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+  }
+  .product-card {
+    position: relative;
+    overflow: hidden;
+    background: var(--muted);
+    cursor: none;
+    group: true;
+  }
+  .product-card::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border: 1px solid transparent;
+    transition: border-color 0.3s;
+    pointer-events: none;
+  }
+  .product-card:hover::after { border-color: var(--accent); }
+  .product-img {
+    width: 100%;
+    aspect-ratio: 3/4;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .product-svg { width: 180px; transition: transform 0.4s; }
+  .product-card:hover .product-svg { transform: scale(1.05) translateY(-8px); }
+  .product-overlay {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    background: linear-gradient(transparent, rgba(10,10,10,0.9));
+    padding: 2rem 1.25rem 1.25rem;
+    transform: translateY(60%);
+    transition: transform 0.3s;
+  }
+  .product-card:hover .product-overlay { transform: translateY(0); }
+  .product-info { padding: 1rem 1.25rem; display: flex; justify-content: space-between; align-items: center; }
+  .product-name { font-weight: 500; font-size: 0.95rem; }
+  .product-price { font-family: 'Bebas Neue', sans-serif; font-size: 1.4rem; color: var(--accent); }
+  .product-tag {
+    display: inline-block;
+    font-size: 0.7rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    background: var(--accent);
+    color: var(--black);
+    padding: 3px 8px;
+    margin-bottom: 8px;
+  }
+  .add-btn {
+    width: 100%;
+    background: var(--accent);
+    color: var(--black);
+    border: none;
+    padding: 0.75rem;
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 500;
+    font-size: 0.85rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    cursor: none;
+    margin-top: 0.5rem;
+  }
+
+  /* CUSTOM SECTION */
+  .custom-section {
+    margin: 0 4rem 7rem;
+    background: var(--muted);
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    overflow: hidden;
+    border: 1px solid #222;
+  }
+  .custom-left {
+    padding: 5rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  .custom-right {
+    background: #161616;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 3rem;
+    position: relative;
+    overflow: hidden;
+  }
+  .customizer-box {
+    width: 260px;
+    background: #0a0a0a;
+    border: 1px solid #333;
+    padding: 1.5rem;
+  }
+  .cust-label { font-size: 0.7rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--gray); margin-bottom: 0.75rem; }
+  .color-chips { display: flex; gap: 8px; margin-bottom: 1.5rem; }
+  .chip {
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    cursor: none;
+    border: 2px solid transparent;
+    transition: border-color 0.2s, transform 0.2s;
+  }
+  .chip:hover, .chip.active { border-color: var(--white); transform: scale(1.1); }
+  .size-chips { display: flex; gap: 8px; margin-bottom: 1.5rem; flex-wrap: wrap; }
+  .size-chip {
+    padding: 6px 14px;
+    border: 1px solid #333;
+    font-size: 0.8rem;
+    cursor: none;
+    transition: all 0.2s;
+    color: var(--gray);
+  }
+  .size-chip:hover, .size-chip.active { border-color: var(--accent); color: var(--accent); }
+  .text-input {
+    width: 100%;
+    background: #111;
+    border: 1px solid #333;
+    color: var(--white);
+    padding: 0.65rem 1rem;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.9rem;
+    margin-bottom: 1.5rem;
+    outline: none;
+  }
+  .text-input:focus { border-color: var(--accent); }
+  .price-preview {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-top: 1px solid #222;
+    padding-top: 1rem;
+    margin-bottom: 1rem;
+  }
+  .price-preview-label { font-size: 0.8rem; color: var(--gray); }
+  .price-preview-val { font-family: 'Bebas Neue', sans-serif; font-size: 2rem; color: var(--accent); }
+  .order-btn {
+    width: 100%;
+    background: var(--accent);
+    color: var(--black);
+    border: none;
+    padding: 1rem;
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 500;
+    font-size: 0.85rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    cursor: none;
+    transition: transform 0.15s;
+  }
+  .order-btn:hover { transform: scale(1.02); }
+
+  /* EVENTS */
+  .events-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: #222; }
+  .event-card {
+    background: var(--black);
+    padding: 2rem;
+    transition: background 0.2s;
+    cursor: none;
+  }
+  .event-card:hover { background: var(--muted); }
+  .event-date {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 3rem;
+    color: var(--accent);
+    line-height: 1;
+  }
+  .event-month { font-size: 0.75rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gray); margin-bottom: 1rem; }
+  .event-name { font-weight: 500; font-size: 1.1rem; margin-bottom: 0.5rem; }
+  .event-place { font-size: 0.85rem; color: var(--gray); }
+  .event-type {
+    display: inline-block;
+    margin-top: 1rem;
+    font-size: 0.7rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    border: 1px solid #333;
+    padding: 4px 10px;
+    color: var(--gray);
+  }
+
+  /* FOOTER */
+  footer {
+    border-top: 1px solid #222;
+    padding: 4rem;
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr;
+    gap: 3rem;
+  }
+  .footer-brand-name {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 3rem;
+    line-height: 1;
+    margin-bottom: 1rem;
+  }
+  .footer-brand-name span { color: var(--accent); }
+  .footer-desc { color: var(--gray); font-size: 0.9rem; line-height: 1.7; }
+  .footer-col h4 { font-size: 0.75rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--accent); margin-bottom: 1.25rem; }
+  .footer-col a {
+    display: block;
+    color: var(--gray);
+    text-decoration: none;
+    font-size: 0.9rem;
+    margin-bottom: 0.75rem;
+    transition: color 0.2s;
+  }
+  .footer-col a:hover { color: var(--white); }
+  .footer-bottom {
+    padding: 1.5rem 4rem;
+    border-top: 1px solid #1a1a1a;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .footer-bottom p { font-size: 0.8rem; color: #555; }
+
+  /* ANIMATIONS */
+  .reveal { opacity: 0; transform: translateY(30px); transition: opacity 0.7s ease, transform 0.7s ease; }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+
+  /* Toast */
+  .toast {
+    position: fixed; bottom: 2rem; right: 2rem;
+    background: var(--accent); color: var(--black);
+    padding: 0.75rem 1.5rem;
+    font-weight: 500;
+    font-size: 0.9rem;
+    z-index: 999;
+    transform: translateY(100px);
+    transition: transform 0.3s;
+    pointer-events: none;
+  }
+  .toast.show { transform: translateY(0); }
+</style>
+</head>
+<body>
+
+<div class="cursor" id="cursor"></div>
+<div class="toast" id="toast">Added to cart ✓</div>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="nav-logo">DRIP<span>•</span>CULTURE</a>
+  <ul class="nav-links">
+    <li><a href="#products">Shop</a></li>
+    <li><a href="#custom">Custom</a></li>
+    <li><a href="#events">Events</a></li>
+    <li><a href="#">About</a></li>
+  </ul>
+  <div style="display:flex;align-items:center;gap:1rem;">
+    <button class="vibe-btn" id="vibeBtn" onclick="openVibeCheck()">✦ Vibe Check</button>
+    <button class="nav-cta">Cart (0)</button>
+  </div>
+</nav>
+
+<!-- VIBE CHECK LOGIN MODAL -->
+<div id="vibeModal" style="display:none;position:fixed;inset:0;z-index:2000;background:rgba(0,0,0,0.9);backdrop-filter:blur(10px);align-items:center;justify-content:center;">
+  <div class="vibe-modal-box" id="vibeBox">
+
+    <!-- GLOW BG -->
+    <div class="vibe-glow"></div>
+
+    <!-- CLOSE -->
+    <button onclick="closeVibeCheck()" style="position:absolute;top:1.25rem;right:1.25rem;background:none;border:none;color:#555;font-size:1.4rem;cursor:none;z-index:2;">✕</button>
+
+    <!-- LOGIN PANEL -->
+    <div id="loginPanel" class="vibe-panel">
+      <div class="vibe-eyebrow">Members Only</div>
+      <h2 class="vibe-heading">VIBE<br><span style="color:var(--accent)">CHECK.</span></h2>
+      <p style="color:var(--gray);font-size:0.88rem;line-height:1.7;margin-bottom:2rem;">Log in to track your orders, save your fits, and get early access to limited drops.</p>
+
+      <div class="vibe-field">
+        <label>Email</label>
+        <input id="l_email" type="email" placeholder="your@email.com">
+      </div>
+      <div class="vibe-field">
+        <label>Password</label>
+        <div style="position:relative;">
+          <input id="l_pass" type="password" placeholder="••••••••" style="padding-right:3rem;">
+          <button onclick="togglePass()" style="position:absolute;right:1rem;top:50%;transform:translateY(-50%);background:none;border:none;color:var(--gray);cursor:none;font-size:0.9rem;" id="eyeBtn">👁</button>
+        </div>
+      </div>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.75rem;">
+        <label style="display:flex;align-items:center;gap:8px;font-size:0.8rem;color:var(--gray);cursor:none;">
+          <input type="checkbox" id="rememberMe" style="accent-color:var(--accent);"> Remember me
+        </label>
+        <a href="#" style="font-size:0.8rem;color:var(--accent);text-decoration:none;">Forgot password?</a>
+      </div>
+      <button class="vibe-submit" onclick="doLogin()">Drop In →</button>
+      <div style="text-align:center;margin-top:1.25rem;font-size:0.85rem;color:var(--gray);">
+        New here? <span onclick="switchToSignup()" style="color:var(--accent);cursor:none;text-decoration:underline;">Create account</span>
+      </div>
+
+      <div class="vibe-divider"><span>or continue with</span></div>
+      <div style="display:flex;gap:0.75rem;">
+        <button class="social-btn" onclick="socialLogin('Google')">G &nbsp;Google</button>
+        <button class="social-btn" onclick="socialLogin('Instagram')">⊕ &nbsp;Instagram</button>
+      </div>
+    </div>
+
+    <!-- SIGNUP PANEL -->
+    <div id="signupPanel" class="vibe-panel" style="display:none;">
+      <div class="vibe-eyebrow">Join the Crew</div>
+      <h2 class="vibe-heading">CREATE<br><span style="color:var(--accent)">ACCOUNT.</span></h2>
+      <div class="vibe-field">
+        <label>Full Name</label>
+        <input id="s_name" type="text" placeholder="Your Name">
+      </div>
+      <div class="vibe-field">
+        <label>Email</label>
+        <input id="s_email" type="email" placeholder="your@email.com">
+      </div>
+      <div class="vibe-field">
+        <label>Password</label>
+        <input id="s_pass" type="password" placeholder="Min 8 characters">
+      </div>
+      <div class="vibe-field" style="margin-bottom:1.75rem;">
+        <label>Phone</label>
+        <input id="s_phone" type="tel" placeholder="+91 98765 43210">
+      </div>
+      <button class="vibe-submit" onclick="doSignup()">Join the Drop ✦</button>
+      <div style="text-align:center;margin-top:1.25rem;font-size:0.85rem;color:var(--gray);">
+        Already in? <span onclick="switchToLogin()" style="color:var(--accent);cursor:none;text-decoration:underline;">Log in</span>
+      </div>
+    </div>
+
+    <!-- LOGGED IN PANEL -->
+    <div id="loggedPanel" class="vibe-panel" style="display:none;">
+      <div class="vibe-eyebrow">Welcome back</div>
+      <h2 class="vibe-heading" id="loggedName">HEY,<br><span style="color:var(--accent)">RAHUL.</span></h2>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.75rem;margin:1.5rem 0;">
+        <div class="dash-card"><div class="dash-num" id="dashOrders">0</div><div class="dash-label">Orders</div></div>
+        <div class="dash-card"><div class="dash-num">1</div><div class="dash-label">Saved Fits</div></div>
+        <div class="dash-card"><div class="dash-num" style="color:#f0a030">NEW</div><div class="dash-label">Drop Alert</div></div>
+        <div class="dash-card"><div class="dash-num">VIP</div><div class="dash-label">Member</div></div>
+      </div>
+      <div style="border:1px solid #222;padding:1rem;margin-bottom:1.5rem;">
+        <div style="font-size:0.7rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--accent);margin-bottom:0.5rem;">Latest Order</div>
+        <div id="latestOrder" style="font-size:0.85rem;color:var(--gray);">No orders yet. Start shopping!</div>
+      </div>
+      <button class="vibe-submit" onclick="doLogout()" style="background:#1e1e1e;color:var(--gray);border:1px solid #333;">Log Out</button>
+    </div>
+
+  </div>
+</div>
+
+<style>
+  .vibe-btn {
+    background: transparent;
+    border: 1px solid var(--accent);
+    color: var(--accent);
+    padding: 0.6rem 1.25rem;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.82rem;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    cursor: none;
+    transition: background 0.2s, color 0.2s, box-shadow 0.2s;
+    position: relative;
+    overflow: hidden;
+  }
+  .vibe-btn:hover { background: var(--accent); color: var(--black); box-shadow: 0 0 20px rgba(200,240,76,0.3); }
+  .vibe-btn.logged-in { background: var(--accent); color: var(--black); }
+
+  .vibe-modal-box {
+    background: #0d0d0d;
+    border: 1px solid #2a2a2a;
+    width: 100%;
+    max-width: 420px;
+    padding: 3rem 2.5rem 2.5rem;
+    position: relative;
+    overflow: hidden;
+    animation: slideUp 0.35s cubic-bezier(0.16,1,0.3,1);
+    max-height: 92vh;
+    overflow-y: auto;
+  }
+  .vibe-glow {
+    position: absolute; top: -80px; right: -80px;
+    width: 240px; height: 240px;
+    background: radial-gradient(circle, rgba(200,240,76,0.12) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .vibe-panel { position: relative; z-index: 1; }
+  .vibe-eyebrow { font-size: 0.7rem; letter-spacing: 0.22em; text-transform: uppercase; color: var(--accent); margin-bottom: 0.5rem; }
+  .vibe-heading { font-family: 'Bebas Neue', sans-serif; font-size: 3.2rem; line-height: 0.95; margin-bottom: 1rem; }
+  .vibe-field { margin-bottom: 1.1rem; }
+  .vibe-field label { display: block; font-size: 0.7rem; letter-spacing: 0.15em; text-transform: uppercase; color: #666; margin-bottom: 0.45rem; }
+  .vibe-field input {
+    width: 100%; background: #161616; border: 1px solid #2a2a2a;
+    color: var(--white); padding: 0.75rem 1rem;
+    font-family: 'DM Sans', sans-serif; font-size: 0.92rem; outline: none;
+    transition: border-color 0.2s;
+  }
+  .vibe-field input:focus { border-color: var(--accent); }
+  .vibe-submit {
+    width: 100%; background: var(--accent); color: var(--black);
+    border: none; padding: 1rem;
+    font-family: 'DM Sans', sans-serif; font-weight: 600;
+    font-size: 0.9rem; letter-spacing: 0.12em; text-transform: uppercase;
+    cursor: none; transition: transform 0.15s, box-shadow 0.2s;
+  }
+  .vibe-submit:hover { transform: translateY(-1px); box-shadow: 0 8px 30px rgba(200,240,76,0.25); }
+  .vibe-divider { display: flex; align-items: center; gap: 1rem; margin: 1.5rem 0 1rem; }
+  .vibe-divider::before, .vibe-divider::after { content: ''; flex: 1; height: 1px; background: #222; }
+  .vibe-divider span { font-size: 0.75rem; color: #555; white-space: nowrap; }
+  .social-btn {
+    flex: 1; background: #161616; border: 1px solid #2a2a2a; color: var(--gray);
+    padding: 0.65rem 0.5rem; font-family: 'DM Sans', sans-serif;
+    font-size: 0.8rem; letter-spacing: 0.05em; cursor: none; transition: border-color 0.2s, color 0.2s;
+  }
+  .social-btn:hover { border-color: var(--accent); color: var(--white); }
+  .dash-card {
+    background: #161616; border: 1px solid #222;
+    padding: 1rem; text-align: center;
+  }
+  .dash-num { font-family: 'Bebas Neue', sans-serif; font-size: 1.8rem; color: var(--accent); line-height: 1; }
+  .dash-label { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.12em; color: #666; margin-top: 4px; }
+</style>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-left">
+    <div class="hero-tag">New Collection 2025</div>
+    <h1 class="hero-title">
+      WEAR<br>
+      YOUR<br>
+      <span class="outline">VIBE</span><span class="accent">.</span>
+    </h1>
+    <p class="hero-desc">Custom streetwear built for concerts, college fests, and every moment worth remembering. Your style. Your story. Your drop.</p>
+    <div class="hero-btns">
+      <a href="#products" class="btn-primary">Shop Now</a>
+      <a href="#custom" class="btn-ghost">Customize →</a>
+    </div>
+    <div class="hero-stats">
+      <div class="stat-item">
+        <div class="stat-num">500+</div>
+        <div class="stat-label">Happy Customers</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">20+</div>
+        <div class="stat-label">Events Done</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">100%</div>
+        <div class="stat-label">Custom Drops</div>
+      </div>
+    </div>
+  </div>
+  <div class="hero-right">
+    <div class="hero-visual">
+      <div class="hero-bg-text">DRIP CULTURE DRIP CULTURE DRIP CULTURE DRIP CULTURE &nbsp;</div>
+      <div class="hero-tshirt">
+        <svg class="tshirt-svg" viewBox="0 0 300 340" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M100 20 L60 60 L10 50 L30 130 L70 120 L70 310 L230 310 L230 120 L270 130 L290 50 L240 60 L200 20 Q150 40 100 20Z" fill="#c8f04c"/>
+          <path d="M100 20 Q150 5 200 20" stroke="#0a0a0a" stroke-width="2" fill="none"/>
+          <text x="150" y="185" text-anchor="middle" font-family="'Bebas Neue', sans-serif" font-size="32" fill="#0a0a0a" letter-spacing="4">DRIP</text>
+          <text x="150" y="218" text-anchor="middle" font-family="'Bebas Neue', sans-serif" font-size="18" fill="#0a0a0a" letter-spacing="8">CULTURE</text>
+          <circle cx="150" cy="145" r="22" fill="#0a0a0a"/>
+          <text x="150" y="152" text-anchor="middle" font-family="'Bebas Neue', sans-serif" font-size="14" fill="#c8f04c">DC</text>
+        </svg>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MARQUEE -->
+<div class="marquee-bar">
+  <div class="marquee-inner">
+    <span>LIMITED DROPS</span><span>★</span><span>CUSTOM ORDERS</span><span>★</span><span>FESTIVAL READY</span><span>★</span><span>CONCERT MERCH</span><span>★</span><span>COLLEGE FESTS</span><span>★</span>
+    <span>LIMITED DROPS</span><span>★</span><span>CUSTOM ORDERS</span><span>★</span><span>FESTIVAL READY</span><span>★</span><span>CONCERT MERCH</span><span>★</span><span>COLLEGE FESTS</span><span>★</span>
+  </div>
+</div>
+
+<!-- PRODUCTS -->
+<section class="section reveal" id="products">
+  <div class="section-header">
+    <div>
+      <div class="section-label">New Arrivals</div>
+      <h2 class="section-title">Fresh Drops</h2>
+    </div>
+    <a href="#" class="btn-ghost" style="font-size:0.8rem; padding:0.65rem 1.5rem">View All →</a>
+  </div>
+  <div class="products-grid">
+    <!-- Card 1 -->
+    <div class="product-card">
+      <div class="product-img" style="background:#111">
+        <svg class="product-svg" viewBox="0 0 200 230" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M68 14 L40 40 L7 33 L20 88 L48 82 L48 210 L152 210 L152 82 L180 88 L193 33 L160 40 L132 14 Q100 26 68 14Z" fill="#1a1a1a" stroke="#333" stroke-width="1"/>
+          <text x="100" y="125" text-anchor="middle" font-family="'Bebas Neue', sans-serif" font-size="22" fill="#c8f04c" letter-spacing="3">CHAOS</text>
+          <text x="100" y="148" text-anchor="middle" font-family="'Bebas Neue', sans-serif" font-size="12" fill="#555" letter-spacing="5">MODE ON</text>
+        </svg>
+        <div class="product-overlay">
+          <span class="product-tag">Bestseller</span>
+          <button class="add-btn" onclick="addCart()">Add to Cart</button>
+        </div>
+      </div>
+      <div class="product-info">
+        <div class="product-name">Chaos Mode Tee</div>
+        <div class="product-price">₹799</div>
+      </div>
+    </div>
+    <!-- Card 2 -->
+    <div class="product-card">
+      <div class="product-img" style="background:#0e1a0e">
+        <svg class="product-svg" viewBox="0 0 200 230" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M68 14 L40 40 L7 33 L20 88 L48 82 L48 210 L152 210 L152 82 L180 88 L193 33 L160 40 L132 14 Q100 26 68 14Z" fill="#0a2a0a" stroke="#1a5c1a" stroke-width="1"/>
+          <circle cx="100" cy="120" r="35" fill="none" stroke="#c8f04c" stroke-width="2"/>
+          <text x="100" y="116" text-anchor="middle" font-family="'Bebas Neue', sans-serif" font-size="14" fill="#c8f04c">FEST</text>
+          <text x="100" y="133" text-anchor="middle" font-family="'Bebas Neue', sans-serif" font-size="14" fill="#c8f04c">2025</text>
+        </svg>
+        <div class="product-overlay">
+          <span class="product-tag">Limited</span>
+          <button class="add-btn" onclick="addCart()">Add to Cart</button>
+        </div>
+      </div>
+      <div class="product-info">
+        <div class="product-name">Fest Season Tee</div>
+        <div class="product-price">₹849</div>
+      </div>
+    </div>
+    <!-- Card 3 -->
+    <div class="product-card">
+      <div class="product-img" style="background:#1a0a00">
+        <svg class="product-svg" viewBox="0 0 200 230" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M68 14 L40 40 L7 33 L20 88 L48 82 L48 210 L152 210 L152 82 L180 88 L193 33 L160 40 L132 14 Q100 26 68 14Z" fill="#2a1200" stroke="#5c3010" stroke-width="1"/>
+          <text x="100" y="100" text-anchor="middle" font-family="'Bebas Neue', sans-serif" font-size="46" fill="#c8f04c">DC</text>
+          <text x="100" y="130" text-anchor="middle" font-family="'Bebas Neue', sans-serif" font-size="11" fill="#888" letter-spacing="6">DRIP CULTURE</text>
+          <line x1="60" y1="140" x2="140" y2="140" stroke="#333" stroke-width="1"/>
+          <text x="100" y="158" text-anchor="middle" font-family="'Bebas Neue', sans-serif" font-size="10" fill="#555" letter-spacing="4">ORIGINAL</text>
+        </svg>
+        <div class="product-overlay">
+          <span class="product-tag">New</span>
+          <button class="add-btn" onclick="addCart()">Add to Cart</button>
+        </div>
+      </div>
+      <div class="product-info">
+        <div class="product-name">DC Classic Tee</div>
+        <div class="product-price">₹699</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CUSTOM SECTION -->
+<div class="custom-section reveal" id="custom">
+  <div class="custom-left">
+    <div class="section-label">Design Your Own</div>
+    <h2 class="section-title" style="margin-bottom:1.5rem">MAKE IT<br>YOURS.</h2>
+    <p style="color:var(--gray); line-height:1.8; margin-bottom:2rem; font-size:0.95rem">Pick your colour, your size, add your name or message. Every custom order is unique — made for you, not the masses. Perfect for groups, events, and squads.</p>
+    <div style="display:flex; gap:2rem; margin-bottom:2rem;">
+      <div><div class="stat-num" style="font-family:'Bebas Neue',sans-serif;font-size:2rem;color:var(--accent)">48h</div><div style="font-size:0.75rem;color:var(--gray);text-transform:uppercase;letter-spacing:0.1em">Turnaround</div></div>
+      <div><div class="stat-num" style="font-family:'Bebas Neue',sans-serif;font-size:2rem;color:var(--accent)">MOQ 1</div><div style="font-size:0.75rem;color:var(--gray);text-transform:uppercase;letter-spacing:0.1em">Min. order</div></div>
+    </div>
+    <a href="#" class="btn-primary">Start Customizing</a>
+  </div>
+  <div class="custom-right">
+    <div class="customizer-box">
+      <div class="cust-label">Pick colour</div>
+      <div class="color-chips">
+        <div class="chip active" style="background:#c8f04c" onclick="setColor(this,'#c8f04c')"></div>
+        <div class="chip" style="background:#f5f0e8" onclick="setColor(this,'#f5f0e8')"></div>
+        <div class="chip" style="background:#e05c5c" onclick="setColor(this,'#e05c5c')"></div>
+        <div class="chip" style="background:#5c9ce0" onclick="setColor(this,'#5c9ce0')"></div>
+        <div class="chip" style="background:#1a1a1a;border:1px solid #444" onclick="setColor(this,'#1a1a1a')"></div>
+      </div>
+      <div class="cust-label">Select size</div>
+      <div class="size-chips">
+        <div class="size-chip" onclick="setSize(this)">XS</div>
+        <div class="size-chip active" onclick="setSize(this)">S</div>
+        <div class="size-chip" onclick="setSize(this)">M</div>
+        <div class="size-chip" onclick="setSize(this)">L</div>
+        <div class="size-chip" onclick="setSize(this)">XL</div>
+      </div>
+      <div class="cust-label">Your text (optional)</div>
+      <input class="text-input" type="text" placeholder="e.g. YOUR NAME, SQUAD 2025..." maxlength="20" id="customText" oninput="updatePrice()">
+      <div class="price-preview">
+        <div class="price-preview-label">Total</div>
+        <div class="price-preview-val" id="priceVal">₹899</div>
+      </div>
+      <button class="order-btn" onclick="addCart()">Place Order</button>
+    </div>
+  </div>
+</div>
+
+<!-- EVENTS -->
+<section class="section reveal" id="events">
+  <div class="section-header">
+    <div>
+      <div class="section-label">Find Us</div>
+      <h2 class="section-title">Upcoming Events</h2>
+    </div>
+  </div>
+  <div class="events-grid">
+    <div class="event-card">
+      <div class="event-date">14</div>
+      <div class="event-month">June 2025</div>
+      <div class="event-name">IIT Delhi Rendezvous</div>
+      <div class="event-place">IIT Delhi Campus, New Delhi</div>
+      <div class="event-type">College Fest</div>
+    </div>
+    <div class="event-card">
+      <div class="event-date">21</div>
+      <div class="event-month">June 2025</div>
+      <div class="event-name">Lollapalooza India</div>
+      <div class="event-place">Mahalaxmi Racecourse, Mumbai</div>
+      <div class="event-type">Concert</div>
+    </div>
+    <div class="event-card">
+      <div class="event-date">04</div>
+      <div class="event-month">July 2025</div>
+      <div class="event-name">Mood Indigo</div>
+      <div class="event-place">IIT Bombay, Mumbai</div>
+      <div class="event-type">College Fest</div>
+    </div>
+    <div class="event-card">
+      <div class="event-date">19</div>
+      <div class="event-month">July 2025</div>
+      <div class="event-name">NH7 Weekender</div>
+      <div class="event-place">Pune, Maharashtra</div>
+      <div class="event-type">Festival</div>
+    </div>
+    <div class="event-card">
+      <div class="event-date">02</div>
+      <div class="event-month">Aug 2025</div>
+      <div class="event-name">Delhi Paint Club Session</div>
+      <div class="event-place">Hauz Khas Village, Delhi</div>
+      <div class="event-type">Paint Club</div>
+    </div>
+    <div class="event-card">
+      <div class="event-date">16</div>
+      <div class="event-month">Aug 2025</div>
+      <div class="event-name">Sunburn Arena</div>
+      <div class="event-place">Sector 19, Noida</div>
+      <div class="event-type">Concert</div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div>
+    <div class="footer-brand-name">DRIP<span>•</span><br>CULTURE</div>
+    <p class="footer-desc">Custom streetwear for the youth.<br>Built for culture. Made to last.</p>
+  </div>
+  <div class="footer-col">
+    <h4>Shop</h4>
+    <a href="#">New Drops</a>
+    <a href="#">Tees</a>
+    <a href="#">Hoodies</a>
+    <a href="#">Custom Orders</a>
+  </div>
+  <div class="footer-col">
+    <h4>Company</h4>
+    <a href="#">About Us</a>
+    <a href="#">Events</a>
+    <a href="#">Bulk Orders</a>
+    <a href="#">Careers</a>
+  </div>
+  <div class="footer-col">
+    <h4>Support</h4>
+    <a href="#">Size Guide</a>
+    <a href="#">Shipping</a>
+    <a href="#">Returns</a>
+    <a href="#">Contact</a>
+  </div>
+</footer>
+<!-- CMS Admin Button -->
+<div style="position:fixed;bottom:2rem;left:2rem;z-index:500;display:flex;flex-direction:column;gap:10px;">
+  <button onclick="openModal('customerModal')" style="background:#1e1e1e;border:1px solid #333;color:var(--accent);padding:0.6rem 1.1rem;font-size:0.75rem;letter-spacing:0.12em;text-transform:uppercase;cursor:none;font-family:'DM Sans',sans-serif;transition:border-color 0.2s;" onmouseenter="this.style.borderColor='var(--accent)'" onmouseleave="this.style.borderColor='#333'">+ Customer Form</button>
+  <button onclick="openModal('orderModal')" style="background:#1e1e1e;border:1px solid #333;color:var(--accent);padding:0.6rem 1.1rem;font-size:0.75rem;letter-spacing:0.12em;text-transform:uppercase;cursor:none;font-family:'DM Sans',sans-serif;transition:border-color 0.2s;" onmouseenter="this.style.borderColor='var(--accent)'" onmouseleave="this.style.borderColor='#333'">+ Order Details</button>
+</div>
+
+<!-- MODAL 1: Customer Info CMS -->
+<div id="customerModal" style="display:none;position:fixed;inset:0;z-index:1000;background:rgba(0,0,0,0.85);backdrop-filter:blur(6px);align-items:center;justify-content:center;">
+  <div style="background:#111;border:1px solid #2a2a2a;width:100%;max-width:480px;padding:2.5rem;position:relative;animation:slideUp 0.3s ease;">
+    <button onclick="closeModal('customerModal')" style="position:absolute;top:1.25rem;right:1.25rem;background:none;border:none;color:#555;font-size:1.4rem;cursor:none;line-height:1;">✕</button>
+    <div style="font-size:0.7rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--accent);margin-bottom:0.5rem;">CMS — Form 1</div>
+    <h3 style="font-family:'Bebas Neue',sans-serif;font-size:2rem;margin-bottom:1.75rem;">Customer Info</h3>
+
+    <div style="margin-bottom:1.25rem;">
+      <label style="display:block;font-size:0.7rem;letter-spacing:0.15em;text-transform:uppercase;color:#888;margin-bottom:0.5rem;">Full Name</label>
+      <input id="c_name" type="text" placeholder="Rahul Sharma" style="width:100%;background:#1a1a1a;border:1px solid #2a2a2a;color:var(--white);padding:0.75rem 1rem;font-family:'DM Sans',sans-serif;font-size:0.95rem;outline:none;" onfocus="this.style.borderColor='var(--accent)'" onblur="this.style.borderColor='#2a2a2a'">
+    </div>
+    <div style="margin-bottom:1.25rem;">
+      <label style="display:block;font-size:0.7rem;letter-spacing:0.15em;text-transform:uppercase;color:#888;margin-bottom:0.5rem;">Phone Number</label>
+      <input id="c_phone" type="tel" placeholder="+91 98765 43210" style="width:100%;background:#1a1a1a;border:1px solid #2a2a2a;color:var(--white);padding:0.75rem 1rem;font-family:'DM Sans',sans-serif;font-size:0.95rem;outline:none;" onfocus="this.style.borderColor='var(--accent)'" onblur="this.style.borderColor='#2a2a2a'">
+    </div>
+    <div style="margin-bottom:1.25rem;">
+      <label style="display:block;font-size:0.7rem;letter-spacing:0.15em;text-transform:uppercase;color:#888;margin-bottom:0.5rem;">Email</label>
+      <input id="c_email" type="email" placeholder="rahul@email.com" style="width:100%;background:#1a1a1a;border:1px solid #2a2a2a;color:var(--white);padding:0.75rem 1rem;font-family:'DM Sans',sans-serif;font-size:0.95rem;outline:none;" onfocus="this.style.borderColor='var(--accent)'" onblur="this.style.borderColor='#2a2a2a'">
+    </div>
+    <div style="margin-bottom:2rem;">
+      <label style="display:block;font-size:0.7rem;letter-spacing:0.15em;text-transform:uppercase;color:#888;margin-bottom:0.5rem;">Delivery Address</label>
+      <textarea id="c_address" rows="3" placeholder="House no., Street, City, State, PIN" style="width:100%;background:#1a1a1a;border:1px solid #2a2a2a;color:var(--white);padding:0.75rem 1rem;font-family:'DM Sans',sans-serif;font-size:0.95rem;outline:none;resize:none;" onfocus="this.style.borderColor='var(--accent)'" onblur="this.style.borderColor='#2a2a2a'"></textarea>
+    </div>
+    <button onclick="saveCustomer()" style="width:100%;background:var(--accent);color:#0a0a0a;border:none;padding:1rem;font-family:'DM Sans',sans-serif;font-weight:500;font-size:0.9rem;letter-spacing:0.12em;text-transform:uppercase;cursor:none;transition:opacity 0.2s;">Save Customer</button>
+
+    <!-- Saved entries -->
+    <div id="customerList" style="margin-top:1.75rem;"></div>
+  </div>
+</div>
+
+<!-- MODAL 2: Order Details CMS -->
+<div id="orderModal" style="display:none;position:fixed;inset:0;z-index:1000;background:rgba(0,0,0,0.85);backdrop-filter:blur(6px);align-items:center;justify-content:center;">
+  <div style="background:#111;border:1px solid #2a2a2a;width:100%;max-width:520px;padding:2.5rem;position:relative;animation:slideUp 0.3s ease;max-height:90vh;overflow-y:auto;">
+    <button onclick="closeModal('orderModal')" style="position:absolute;top:1.25rem;right:1.25rem;background:none;border:none;color:#555;font-size:1.4rem;cursor:none;line-height:1;">✕</button>
+    <div style="font-size:0.7rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--accent);margin-bottom:0.5rem;">CMS — Form 2</div>
+    <h3 style="font-family:'Bebas Neue',sans-serif;font-size:2rem;margin-bottom:1.75rem;">Order Details</h3>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1.25rem;">
+      <div>
+        <label style="display:block;font-size:0.7rem;letter-spacing:0.15em;text-transform:uppercase;color:#888;margin-bottom:0.5rem;">Customer Name</label>
+        <input id="o_name" type="text" placeholder="Rahul Sharma" style="width:100%;background:#1a1a1a;border:1px solid #2a2a2a;color:var(--white);padding:0.75rem 1rem;font-family:'DM Sans',sans-serif;font-size:0.9rem;outline:none;" onfocus="this.style.borderColor='var(--accent)'" onblur="this.style.borderColor='#2a2a2a'">
+      </div>
+      <div>
+        <label style="display:block;font-size:0.7rem;letter-spacing:0.15em;text-transform:uppercase;color:#888;margin-bottom:0.5rem;">Phone</label>
+        <input id="o_phone" type="tel" placeholder="+91 98765 43210" style="width:100%;background:#1a1a1a;border:1px solid #2a2a2a;color:var(--white);padding:0.75rem 1rem;font-family:'DM Sans',sans-serif;font-size:0.9rem;outline:none;" onfocus="this.style.borderColor='var(--accent)'" onblur="this.style.borderColor='#2a2a2a'">
+      </div>
+    </div>
+    <div style="margin-bottom:1.25rem;">
+      <label style="display:block;font-size:0.7rem;letter-spacing:0.15em;text-transform:uppercase;color:#888;margin-bottom:0.5rem;">Delivery Address</label>
+      <textarea id="o_address" rows="2" placeholder="House no., Street, City, State, PIN" style="width:100%;background:#1a1a1a;border:1px solid #2a2a2a;color:var(--white);padding:0.75rem 1rem;font-family:'DM Sans',sans-serif;font-size:0.9rem;outline:none;resize:none;" onfocus="this.style.borderColor='var(--accent)'" onblur="this.style.borderColor='#2a2a2a'"></textarea>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:1rem;margin-bottom:1.25rem;">
+      <div>
+        <label style="display:block;font-size:0.7rem;letter-spacing:0.15em;text-transform:uppercase;color:#888;margin-bottom:0.5rem;">Product</label>
+        <select id="o_product" style="width:100%;background:#1a1a1a;border:1px solid #2a2a2a;color:var(--white);padding:0.75rem 0.75rem;font-family:'DM Sans',sans-serif;font-size:0.85rem;outline:none;" onfocus="this.style.borderColor='var(--accent)'" onblur="this.style.borderColor='#2a2a2a'">
+          <option value="Chaos Mode Tee">Chaos Mode Tee</option>
+          <option value="Fest Season Tee">Fest Season Tee</option>
+          <option value="DC Classic Tee">DC Classic Tee</option>
+          <option value="Custom Order">Custom Order</option>
+        </select>
+      </div>
+      <div>
+        <label style="display:block;font-size:0.7rem;letter-spacing:0.15em;text-transform:uppercase;color:#888;margin-bottom:0.5rem;">Size</label>
+        <select id="o_size" style="width:100%;background:#1a1a1a;border:1px solid #2a2a2a;color:var(--white);padding:0.75rem 0.75rem;font-family:'DM Sans',sans-serif;font-size:0.85rem;outline:none;" onfocus="this.style.borderColor='var(--accent)'" onblur="this.style.borderColor='#2a2a2a'">
+          <option>XS</option><option>S</option><option selected>M</option><option>L</option><option>XL</option>
+        </select>
+      </div>
+      <div>
+        <label style="display:block;font-size:0.7rem;letter-spacing:0.15em;text-transform:uppercase;color:#888;margin-bottom:0.5rem;">Qty</label>
+        <input id="o_qty" type="number" value="1" min="1" style="width:100%;background:#1a1a1a;border:1px solid #2a2a2a;color:var(--white);padding:0.75rem 0.75rem;font-family:'DM Sans',sans-serif;font-size:0.9rem;outline:none;" onfocus="this.style.borderColor='var(--accent)'" onblur="this.style.borderColor='#2a2a2a'">
+      </div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:2rem;">
+      <div>
+        <label style="display:block;font-size:0.7rem;letter-spacing:0.15em;text-transform:uppercase;color:#888;margin-bottom:0.5rem;">Amount (₹)</label>
+        <input id="o_amount" type="number" placeholder="899" style="width:100%;background:#1a1a1a;border:1px solid #2a2a2a;color:var(--white);padding:0.75rem 1rem;font-family:'DM Sans',sans-serif;font-size:0.9rem;outline:none;" onfocus="this.style.borderColor='var(--accent)'" onblur="this.style.borderColor='#2a2a2a'">
+      </div>
+      <div>
+        <label style="display:block;font-size:0.7rem;letter-spacing:0.15em;text-transform:uppercase;color:#888;margin-bottom:0.5rem;">Status</label>
+        <select id="o_status" style="width:100%;background:#1a1a1a;border:1px solid #2a2a2a;color:var(--white);padding:0.75rem 0.75rem;font-family:'DM Sans',sans-serif;font-size:0.85rem;outline:none;" onfocus="this.style.borderColor='var(--accent)'" onblur="this.style.borderColor='#2a2a2a'">
+          <option>Pending</option>
+          <option>Confirmed</option>
+          <option>In Production</option>
+          <option>Shipped</option>
+          <option>Delivered</option>
+        </select>
+      </div>
+    </div>
+    <button onclick="saveOrder()" style="width:100%;background:var(--accent);color:#0a0a0a;border:none;padding:1rem;font-family:'DM Sans',sans-serif;font-weight:500;font-size:0.9rem;letter-spacing:0.12em;text-transform:uppercase;cursor:none;">Save Order</button>
+
+    <!-- Saved orders -->
+    <div id="orderList" style="margin-top:1.75rem;"></div>
+  </div>
+</div>
+
+<style>
+  @keyframes slideUp { from{opacity:0;transform:translateY(24px)} to{opacity:1;transform:translateY(0)} }
+  .cms-entry { border:1px solid #222; padding:0.9rem 1rem; margin-top:0.75rem; font-size:0.85rem; line-height:1.7; }
+  .cms-entry .e-label { font-size:0.65rem; letter-spacing:0.15em; text-transform:uppercase; color:var(--accent); }
+  .cms-entry .e-val { color:var(--white); }
+  .status-badge { display:inline-block; font-size:0.65rem; letter-spacing:0.1em; text-transform:uppercase; padding:2px 8px; border-radius:2px; font-weight:500; }
+  .status-Pending { background:#332200; color:#f0a030; }
+  .status-Confirmed { background:#0a2a0a; color:#5ce05c; }
+  .status-In.Production { background:#1a1a2a; color:#7090f0; }
+  .status-Shipped { background:#1a0a2a; color:#c07af0; }
+  .status-Delivered { background:#0a2a1a; color:#4cf090; }
+</style>
+
+<script>
+  // Cursor
+  const cursor = document.getElementById('cursor');
+  document.addEventListener('mousemove', e => {
+    cursor.style.left = e.clientX + 'px';
+    cursor.style.top = e.clientY + 'px';
+  });
+  document.querySelectorAll('a,button,.product-card,.chip,.size-chip,.event-card').forEach(el => {
+    el.addEventListener('mouseenter', () => cursor.classList.add('grow'));
+    el.addEventListener('mouseleave', () => cursor.classList.remove('grow'));
+  });
+
+  // Cart
+  let cartCount = 0;
+  const navCta = document.querySelector('.nav-cta');
+  const toast = document.getElementById('toast');
+  function addCart() {
+    cartCount++;
+    navCta.textContent = `Cart (${cartCount})`;
+    toast.classList.add('show');
+    setTimeout(() => toast.classList.remove('show'), 2000);
+  }
+
+  // Customizer
+  function setColor(el, color) {
+    document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+    el.classList.add('active');
+  }
+  function setSize(el) {
+    document.querySelectorAll('.size-chip').forEach(c => c.classList.remove('active'));
+    el.classList.add('active');
+  }
+  function updatePrice() {
+    const text = document.getElementById('customText').value;
+    document.getElementById('priceVal').textContent = text.length > 0 ? '₹1,099' : '₹899';
+  }
+
+  // Scroll reveal
+  const reveals = document.querySelectorAll('.reveal');
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+  }, { threshold: 0.1 });
+  reveals.forEach(r => obs.observe(r));
+
+  // ── API base URL (same origin since backend serves frontend) ──
+  const API = '/api';
+
+  // ── Toast ──────────────────────────────────────────────────────
+  function showToast(msg) {
+    toast.textContent = msg + ' ✓';
+    toast.classList.add('show');
+    setTimeout(() => toast.classList.remove('show'), 2400);
+  }
+
+  // ── Modals ─────────────────────────────────────────────────────
+  function openModal(id) { document.getElementById(id).style.display = 'flex'; }
+  function closeModal(id) { document.getElementById(id).style.display = 'none'; }
+  ['customerModal','orderModal'].forEach(id => {
+    document.getElementById(id).addEventListener('click', function(e) {
+      if (e.target === this) closeModal(id);
+    });
+  });
+
+  // ── VIBE CHECK (Auth) ──────────────────────────────────────────
+  let currentUser = JSON.parse(sessionStorage.getItem('dc_user') || 'null');
+  if (currentUser) {
+    document.getElementById('vibeBtn').textContent = '✦ ' + currentUser.name.split(' ')[0];
+    document.getElementById('vibeBtn').classList.add('logged-in');
+  }
+
+  function openVibeCheck() {
+    document.getElementById('vibeModal').style.display = 'flex';
+    if (currentUser) showLoggedPanel();
+    else showLoginPanel();
+  }
+  function closeVibeCheck() { document.getElementById('vibeModal').style.display = 'none'; }
+  document.getElementById('vibeModal').addEventListener('click', function(e) {
+    if (e.target === this) closeVibeCheck();
+  });
+
+  function showLoginPanel()  {
+    document.getElementById('loginPanel').style.display  = 'block';
+    document.getElementById('signupPanel').style.display = 'none';
+    document.getElementById('loggedPanel').style.display = 'none';
+  }
+  function showSignupPanel() {
+    document.getElementById('loginPanel').style.display  = 'none';
+    document.getElementById('signupPanel').style.display = 'block';
+    document.getElementById('loggedPanel').style.display = 'none';
+  }
+  async function showLoggedPanel() {
+    document.getElementById('loginPanel').style.display  = 'none';
+    document.getElementById('signupPanel').style.display = 'none';
+    document.getElementById('loggedPanel').style.display = 'block';
+    const firstName = currentUser.name.split(' ')[0].toUpperCase();
+    document.getElementById('loggedName').innerHTML = 'HEY,<br><span style="color:var(--accent)">' + firstName + '.</span>';
+    try {
+      const r = await fetch(API + '/stats');
+      const s = await r.json();
+      document.getElementById('dashOrders').textContent = s.totalOrders || 0;
+      const or = await fetch(API + '/orders');
+      const od = await or.json();
+      if (od.orders && od.orders.length > 0) {
+        const last = od.orders[od.orders.length - 1];
+        document.getElementById('latestOrder').innerHTML =
+          '<span style="color:var(--white)">' + last.product + '</span>' +
+          ' &nbsp;<span style="color:var(--accent);font-family:\'Bebas Neue\',sans-serif">&#8377;' + last.amount + '</span>' +
+          '<br><span style="font-size:0.75rem">' + last.status + ' | ' + last.orderId + '</span>';
+      }
+    } catch(e) { /* backend not reachable — silent */ }
+  }
+  function switchToSignup() { showSignupPanel(); }
+  function switchToLogin()  { showLoginPanel(); }
+  function togglePass() {
+    const p = document.getElementById('l_pass');
+    p.type = p.type === 'password' ? 'text' : 'password';
+  }
+
+  async function doLogin() {
+    const email = document.getElementById('l_email').value.trim();
+    const pass  = document.getElementById('l_pass').value;
+    if (!email || !pass) { showToast('Fill in your details'); return; }
+    try {
+      const res  = await fetch(API + '/auth/login', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ email, password: pass }) });
+      const data = await res.json();
+      if (!res.ok) { showToast(data.error || 'Login failed'); return; }
+      currentUser = data.user;
+      sessionStorage.setItem('dc_user', JSON.stringify(currentUser));
+      document.getElementById('vibeBtn').textContent = '✦ ' + currentUser.name.split(' ')[0];
+      document.getElementById('vibeBtn').classList.add('logged-in');
+      showLoggedPanel();
+      showToast('Welcome back, ' + currentUser.name.split(' ')[0]);
+    } catch(e) { showToast('Cannot reach server'); }
+  }
+
+  async function doSignup() {
+    const name  = document.getElementById('s_name').value.trim();
+    const email = document.getElementById('s_email').value.trim();
+    const pass  = document.getElementById('s_pass').value;
+    const phone = document.getElementById('s_phone').value.trim();
+    if (!name || !email || !pass) { showToast('Fill all fields to join'); return; }
+    try {
+      const res  = await fetch(API + '/auth/signup', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ name, email, password: pass, phone }) });
+      const data = await res.json();
+      if (!res.ok) { showToast(data.error || 'Signup failed'); return; }
+      currentUser = data.user;
+      sessionStorage.setItem('dc_user', JSON.stringify(currentUser));
+      document.getElementById('vibeBtn').textContent = '✦ ' + currentUser.name.split(' ')[0];
+      document.getElementById('vibeBtn').classList.add('logged-in');
+      showLoggedPanel();
+      showToast("You're in, " + currentUser.name.split(' ')[0] + ' ✦');
+    } catch(e) { showToast('Cannot reach server'); }
+  }
+
+  function socialLogin(provider) {
+    currentUser = { name: provider + ' User', email: provider.toLowerCase() + '@user.com' };
+    sessionStorage.setItem('dc_user', JSON.stringify(currentUser));
+    document.getElementById('vibeBtn').textContent = '✦ ' + provider;
+    document.getElementById('vibeBtn').classList.add('logged-in');
+    showLoggedPanel();
+    showToast('Signed in with ' + provider);
+  }
+
+  function doLogout() {
+    currentUser = null;
+    sessionStorage.removeItem('dc_user');
+    document.getElementById('vibeBtn').textContent = '✦ Vibe Check';
+    document.getElementById('vibeBtn').classList.remove('logged-in');
+    showLoginPanel();
+    document.getElementById('l_email').value = '';
+    document.getElementById('l_pass').value = '';
+    showToast('Logged out. See you soon.');
+    closeVibeCheck();
+  }
+
+  // ── CMS — Customer Form ────────────────────────────────────────
+  async function saveCustomer() {
+    const name    = document.getElementById('c_name').value.trim();
+    const phone   = document.getElementById('c_phone').value.trim();
+    const email   = document.getElementById('c_email').value.trim();
+    const address = document.getElementById('c_address').value.trim();
+    if (!name || !phone || !email || !address) { alert('Please fill all fields.'); return; }
+    try {
+      const res  = await fetch(API + '/customers', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ name, phone, email, address }) });
+      const data = await res.json();
+      if (!res.ok) { showToast(data.error || 'Save failed'); return; }
+      showToast('Customer saved');
+      ['c_name','c_phone','c_email','c_address'].forEach(id => document.getElementById(id).value = '');
+      loadCustomers();
+    } catch(e) { showToast('Cannot reach server'); }
+  }
+
+  async function loadCustomers() {
+    try {
+      const res  = await fetch(API + '/customers');
+      const data = await res.json();
+      const list = document.getElementById('customerList');
+      if (!data.customers || !data.customers.length) { list.innerHTML = ''; return; }
+      list.innerHTML = '<div style="font-size:0.7rem;letter-spacing:0.15em;text-transform:uppercase;color:#555;margin-bottom:0.5rem;">Saved Customers (' + data.customers.length + ')</div>' +
+        data.customers.map((c,i) =>
+          '<div class="cms-entry"><div style="display:flex;justify-content:space-between;margin-bottom:4px;"><span style="font-weight:500;color:var(--white)">' + c.name + '</span><span style="font-size:0.75rem;color:var(--gray)">#' + String(i+1).padStart(3,'0') + '</span></div>' +
+          '<span class="e-label">Phone:</span> <span class="e-val">' + c.phone + '</span><br>' +
+          '<span class="e-label">Email:</span> <span class="e-val">' + c.email + '</span><br>' +
+          '<span class="e-label">Address:</span> <span class="e-val">' + c.address + '</span></div>'
+        ).join('');
+    } catch(e) {}
+  }
+
+  // ── CMS — Order Form ───────────────────────────────────────────
+  async function saveOrder() {
+    const name    = document.getElementById('o_name').value.trim();
+    const phone   = document.getElementById('o_phone').value.trim();
+    const address = document.getElementById('o_address').value.trim();
+    const product = document.getElementById('o_product').value;
+    const size    = document.getElementById('o_size').value;
+    const qty     = document.getElementById('o_qty').value;
+    const amount  = document.getElementById('o_amount').value.trim();
+    const status  = document.getElementById('o_status').value;
+    if (!name || !phone || !address || !amount) { alert('Please fill all required fields.'); return; }
+    try {
+      const res  = await fetch(API + '/orders', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ name, phone, address, product, size, qty, amount, status }) });
+      const data = await res.json();
+      if (!res.ok) { showToast(data.error || 'Save failed'); return; }
+      showToast('Order saved');
+      ['o_name','o_phone','o_address','o_amount'].forEach(id => document.getElementById(id).value = '');
+      document.getElementById('o_qty').value = 1;
+      loadOrders();
+    } catch(e) { showToast('Cannot reach server'); }
+  }
+
+  async function loadOrders() {
+    try {
+      const res  = await fetch(API + '/orders');
+      const data = await res.json();
+      const list = document.getElementById('orderList');
+      if (!data.orders || !data.orders.length) { list.innerHTML = ''; return; }
+      const sc = {'Pending':'#f0a030','Confirmed':'#5ce05c','In Production':'#7090f0','Shipped':'#c07af0','Delivered':'#4cf090'};
+      const sb = {'Pending':'#332200','Confirmed':'#0a2a0a','In Production':'#1a1a2a','Shipped':'#1a0a2a','Delivered':'#0a2a1a'};
+      list.innerHTML = '<div style="font-size:0.7rem;letter-spacing:0.15em;text-transform:uppercase;color:#555;margin-bottom:0.5rem;">Saved Orders (' + data.orders.length + ')</div>' +
+        data.orders.map(o =>
+          '<div class="cms-entry"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;"><span style="font-weight:500;color:var(--white)">' + o.name + '</span><span style="background:' + (sb[o.status]||'#222') + ';color:' + (sc[o.status]||'#aaa') + ';font-size:0.65rem;letter-spacing:0.1em;text-transform:uppercase;padding:2px 8px;">' + o.status + '</span></div>' +
+          '<span class="e-label">Order ID:</span> <span class="e-val" style="color:var(--accent)">' + o.orderId + '</span> &nbsp;<span class="e-label">Phone:</span> <span class="e-val">' + o.phone + '</span><br>' +
+          '<span class="e-label">Product:</span> <span class="e-val">' + o.product + '</span> &nbsp;<span class="e-label">Size:</span> <span class="e-val">' + o.size + '</span> &nbsp;<span class="e-label">Qty:</span> <span class="e-val">' + o.qty + '</span><br>' +
+          '<span class="e-label">Address:</span> <span class="e-val">' + o.address + '</span><br>' +
+          '<span class="e-label">Amount:</span> <span class="e-val" style="font-family:\'Bebas Neue\',sans-serif;font-size:1.1rem;color:var(--accent)">&#8377;' + o.amount + '</span></div>'
+        ).join('');
+    } catch(e) {}
+  }
+
+  // Load existing data when modals open
+  document.querySelector('[onclick="openModal(\'customerModal\')"]').addEventListener('click', () => setTimeout(loadCustomers, 100));
+  document.querySelector('[onclick="openModal(\'orderModal\')"]').addEventListener('click', () => setTimeout(loadOrders, 100));
+</script>
+</body>
+</html>
