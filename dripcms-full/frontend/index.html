@@ -477,7 +477,7 @@
       <div style="display:flex;align-items:center;margin-bottom:3rem;gap:0;" id="stepProgress">
         <div class="step-pill active" id="pill-1" onclick="goStep(1)"><span>01</span> Item</div>
         <div class="step-line"></div>
-        <div class="step-pill" id="pill-2" onclick="goStep(2)"><span>02</span> Size</div>
+        <div class="step-pill" id="pill-2" <button onclick="goStep(2)"><span>01</span> Size</div>
         <div class="step-line"></div>
         <div class="step-pill" id="pill-3" onclick="goStep(3)"><span>03</span> Colour</div>
         <div class="step-line"></div>
@@ -496,7 +496,7 @@
             <div class="step-heading">01 — Pick your item 👕</div>
             <p style="color:var(--gray);font-size:0.85rem;margin-bottom:1.5rem;">what are we dripping out today bestie?</p>
             <div style="display:flex;flex-direction:column;gap:0.75rem;">
-              <div class="item-card active" id="item-tshirt" onclick="selectItem(this,'T-Shirt',699)">
+              <div class="item-card active" id="item-tshirt" <button onclick="goStep(2)"><span>02</span> Size</div>
                 <div style="display:flex;align-items:center;gap:1rem;">
                   <div class="item-icon">👕</div>
                   <div>
